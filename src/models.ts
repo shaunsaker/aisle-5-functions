@@ -73,3 +73,12 @@ export interface ShopProduct {
 export interface NormalisedShopProduct extends ShopProduct {
   quantityUnit: Unit;
 }
+
+export const COMMISSION_FACTOR = 0.1;
+
+export interface BestMatch {
+  shopProductId: ShopProductId;
+  pricePerUnit: PricePerUnit;
+  quantity: Quantity;
+  quantityToOrder: Quantity;
+}

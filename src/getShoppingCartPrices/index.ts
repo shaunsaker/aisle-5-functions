@@ -5,6 +5,7 @@ import { firebaseFetchProduct } from '../firebase/firebaseFetchProduct';
 import { firebaseFetchShopProduct } from '../firebase/firebaseFetchShopProduct';
 import { firebaseFetchShops } from '../firebase/firebaseFetchShops';
 import {
+  BestMatch,
   Product,
   ProductId,
   ShopId,
@@ -13,7 +14,8 @@ import {
 } from '../models';
 import { isObjectEmpty } from '../utils/isObjectEmpty';
 import { objectToArray } from '../utils/objectToArray';
-import { BestMatch, getBestMatchedProducts } from './getBestMatchedProducts';
+import { attachCommissionToBestMatches } from './attachCommissionToPrices';
+import { getBestMatchedProducts } from './getBestMatchedProducts';
 
 interface ResponseData {
   [key: ShopId]: {
@@ -103,7 +105,12 @@ const fetchShoppingCartPrices = async (
           options: shopProducts,
         });
 
-        responseData[shopId][item.productId] = bestMatchedProducts;
+        // attach commission to each price
+        const bestMatchedProductsWithCommission =
+          attachCommissionToBestMatches(bestMatchedProducts);
+
+        responseData[shopId][item.productId] =
+          bestMatchedProductsWithCommission;
       }
     }
 

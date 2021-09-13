@@ -4,6 +4,8 @@
   "scripts": {
     "env:dev": "cp ./config/development/* ./src/firebase && firebase use development",
     "env:prod": "cp ./config/production/* ./src/firebase && firebase use production",
+    "predev": "yarn env:dev",
+    "dev": "ts-node-transpile-only",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "firebase serve --only functions",

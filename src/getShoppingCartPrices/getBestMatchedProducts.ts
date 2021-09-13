@@ -1,9 +1,8 @@
 import {
+  BestMatch,
   NormalisedShopProduct,
-  PricePerUnit,
   Quantity,
   ShopProduct,
-  ShopProductId,
   Unit,
 } from '../models';
 import { sortArrayOfObjectsByKey } from '../utils/sortArrayOfObjectsByKey';
@@ -54,13 +53,6 @@ export const normaliseShopProduct = (
     quantityValue: normalisedQuantityValue,
   };
 };
-
-export interface BestMatch {
-  shopProductId: ShopProductId;
-  pricePerUnit: PricePerUnit;
-  quantity: Quantity;
-  quantityToOrder: Quantity;
-}
 
 const findBestMatchedShopProduct = (
   quantityNeeded: number,
