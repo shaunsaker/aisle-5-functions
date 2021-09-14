@@ -19,7 +19,10 @@ import { getBestMatchedProducts } from './getBestMatchedProducts';
 
 interface ResponseData {
   [key: ShopId]: {
-    [key: ProductId]: BestMatch[];
+    [key: ProductId]: {
+      order: BestMatch[];
+      products: ShopProduct[];
+    };
   };
 }
 
@@ -109,8 +112,10 @@ const fetchShoppingCartPrices = async (
         const bestMatchedProductsWithCommission =
           attachCommissionToBestMatches(bestMatchedProducts);
 
-        responseData[shopId][item.productId] =
-          bestMatchedProductsWithCommission;
+        responseData[shopId][item.productId] = {
+          order: bestMatchedProductsWithCommission,
+          products: shopProducts,
+        };
       }
     }
 
