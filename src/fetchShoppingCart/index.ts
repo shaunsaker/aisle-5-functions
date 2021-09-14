@@ -136,7 +136,7 @@ const fetchShoppingCartPrices = async (
   };
 };
 
-const getShoppingCartPrices = functions.https.onCall(
+const fetchShoppingCart = functions.https.onCall(
   async (_, context: CallableContext): Promise<Response> => {
     const uid = context.auth?.uid;
 
@@ -153,4 +153,4 @@ const getShoppingCartPrices = functions.https.onCall(
 
 // doAsync();
 
-export { getShoppingCartPrices };
+export { fetchShoppingCart };
