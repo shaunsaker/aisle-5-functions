@@ -9,13 +9,13 @@
     "build": "tsc",
     "build:watch": "tsc --watch",
     "serve": "firebase serve --only functions",
-    "predeploy": "yarn run build",
-    "deploy": "firebase deploy --only functions",
     "lint": "npm-run-all --parallel lint:*",
     "lint:eslint": "eslint --ext [.ts,.tsx] .",
     "lint:prettier": "prettier -c \"**/*.{ts,tsx}\"",
     "lint:tsc": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "predeploy": "yarn lint && yarn test && rimraf ./dist && yarn run build",
+    "deploy": "firebase deploy --only functions"
   },
   "main": "dist/index.js",
   "dependencies": {
@@ -41,6 +41,7 @@
     "jest": "^27.1.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.4.0",
+    "rimraf": "^3.0.2",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1"
   },
