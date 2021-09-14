@@ -1,1 +1,1 @@
-export * from './getShoppingCartPrices';
+export * from './fetchShoppingCart';
