@@ -1,4 +1,4 @@
-import { BestMatch, COMMISSION_FACTOR } from '../models';
+import { COMMISSION_FACTOR, ShopProductWithQuantityToOrder } from '../models';
 
 export const getCommission = (
   basePrice: number,
@@ -16,11 +16,11 @@ export const getCommission = (
   return nearest99;
 };
 
-export const attachCommissionToBestMatches = (
-  items: BestMatch[],
-): BestMatch[] => {
+export const attachCommissionToShopProducts = (
+  items: ShopProductWithQuantityToOrder[],
+): ShopProductWithQuantityToOrder[] => {
   return items.map((item) => ({
     ...item,
-    pricePerUnit: getCommission(item.pricePerUnit, COMMISSION_FACTOR),
+    pricePerUnit: getCommission(item.price, COMMISSION_FACTOR),
   }));
 };

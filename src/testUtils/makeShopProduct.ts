@@ -1,4 +1,4 @@
-import { ShopProduct } from '../models';
+import { ShopProduct, Unit } from '../models';
 import { getUuid } from '../utils/getUuid';
 
 export const makeShopProduct = ({
@@ -6,7 +6,7 @@ export const makeShopProduct = ({
   displayName = '',
   id,
   price = 0,
-  quantityUnit = 'unit',
+  quantityUnit = Unit.unit,
   quantityValue = 0,
 }: Partial<ShopProduct>): ShopProduct => {
   return {

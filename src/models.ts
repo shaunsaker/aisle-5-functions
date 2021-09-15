@@ -10,7 +10,6 @@ export interface ShoppingListItem {
   productId: ShoppingListItemId;
   quantity: Quantity;
   dateAdded: string;
-  pricePerUnit?: PricePerUnit; // added when ordered
 }
 
 export type ShoppingListItems = Record<ShoppingListItemId, ShoppingListItem>;
@@ -66,19 +65,16 @@ export interface ShopProduct {
   displayName: string;
   id: string;
   price: number;
-  quantityUnit: string;
-  quantityValue: number;
+  quantityUnit: Unit;
+  quantityValue: Quantity;
 }
 
 export interface NormalisedShopProduct extends ShopProduct {
   quantityUnit: Unit;
 }
 
-export const COMMISSION_FACTOR = 0.1;
-
-export interface BestMatch {
-  shopProductId: ShopProductId;
-  pricePerUnit: PricePerUnit;
-  quantity: Quantity;
+export interface ShopProductWithQuantityToOrder extends ShopProduct {
   quantityToOrder: Quantity;
 }
+
+export const COMMISSION_FACTOR = 0.1;

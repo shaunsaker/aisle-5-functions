@@ -1,12 +1,13 @@
 import {
-  BestMatch,
   NormalisedShopProduct,
   Quantity,
   ShopProduct,
+  ShopProductWithQuantityToOrder,
   Unit,
 } from '../models';
 import { sortArrayOfObjectsByKey } from '../utils/sortArrayOfObjectsByKey';
 
+// TODO: move this to scraper
 export const normaliseShopProduct = (
   shopProduct: ShopProduct,
 ): NormalisedShopProduct => {
@@ -56,19 +57,19 @@ export const normaliseShopProduct = (
 
 const findBestMatchedShopProduct = (
   quantityNeeded: number,
-  options: ShopProduct[],
-): BestMatch | null => {
+  shopProducts: ShopProduct[],
+): ShopProductWithQuantityToOrder | null => {
   // ie. choose option with smallest quantity higher or equal to our quantity needed
   // (only if there are no lower items)
-  // OR if there aren't options with higher quantity, choose multiples of options with highest quantity lower than
+  // OR if there aren't shopProducts with higher quantity, choose multiples of shopProducts with highest quantity lower than
 
-  if (!options.length) {
+  if (!shopProducts.length) {
     return null;
   }
 
   // sort from highest to lowest
   const sortedOptions = sortArrayOfObjectsByKey<ShopProduct>(
-    options,
+    shopProducts,
     'quantityValue',
     true,
   );
@@ -77,63 +78,58 @@ const findBestMatchedShopProduct = (
     (option) => option.quantityValue <= quantityNeeded,
   );
 
-  let bestMatchedShopProduct: ShopProduct;
+  let shopProduct: ShopProductWithQuantityToOrder;
+  const defaultQuantityToOrder = 1;
 
   if (itemsWithLowerQuantity.length) {
     // return the item with the highest quantity that is lower than the quantity needed
-    bestMatchedShopProduct = itemsWithLowerQuantity[0];
+    shopProduct = {
+      ...itemsWithLowerQuantity[0],
+      quantityToOrder: defaultQuantityToOrder,
+    };
   } else {
     // return the item with the lowest quantity
-    bestMatchedShopProduct = sortedOptions.reverse()[0];
+    shopProduct = {
+      ...sortedOptions.reverse()[0],
+      quantityToOrder: defaultQuantityToOrder,
+    };
   }
 
-  const bestMatch: BestMatch = {
-    shopProductId: bestMatchedShopProduct.id,
-    pricePerUnit: bestMatchedShopProduct.price,
-    quantity: bestMatchedShopProduct.quantityValue,
-    quantityToOrder: 1,
-  };
-
-  return bestMatch;
+  return shopProduct;
 };
 
 // returns the best combination of items relevant to the quantityNeeded
 // e.g. I need 10 milks, they come in 1, 3 and 20 packs. Returns 3x3 and 1x1.
 // NOTE: we assume the pricePerUnit decreases for bulk items
-// NOTE: we assume that the units of the options are the same
+// NOTE: we assume that the units of the shopProducts are the same
 // FIXME: this is quick and dirty function and can definitely be improved
-export const getBestMatchedProducts = ({
+export const getShopProductsWithQuantityToOrder = ({
   quantityNeeded,
-  options,
+  shopProducts,
 }: {
   quantityNeeded: Quantity;
-  options: ShopProduct[];
-}): BestMatch[] => {
-  // normalise the shop products
-  const normalisedShopProducts = options.map((shopProduct) =>
-    normaliseShopProduct(shopProduct),
-  );
-
+  shopProducts: ShopProduct[];
+}): ShopProductWithQuantityToOrder[] => {
   // reduce until we have our quantity needed
   let quantityStillNeeded = quantityNeeded;
-  const bestMatches: BestMatch[] = [];
+  const bestMatchedShopProducts: ShopProductWithQuantityToOrder[] = [];
 
-  while (options.length && quantityStillNeeded > 0) {
+  while (shopProducts.length && quantityStillNeeded > 0) {
     // find the best matched product for the quantity still needed
-    const bestMatch = findBestMatchedShopProduct(
+    const bestMatchedShopProduct = findBestMatchedShopProduct(
       quantityStillNeeded,
-      normalisedShopProducts,
+      shopProducts,
     );
 
     // add it to best matches
-    if (bestMatch) {
-      bestMatches.push(bestMatch);
+    if (bestMatchedShopProduct) {
+      bestMatchedShopProducts.push(bestMatchedShopProduct);
     }
 
     // set the new quantity still needed
-    const quantityAlreadyPresent = bestMatches.reduce(
-      (quantity, currentBestMatch) => {
-        return (quantity += currentBestMatch.quantity);
+    const quantityAlreadyPresent = bestMatchedShopProducts.reduce(
+      (quantity, current) => {
+        return (quantity += current.quantityValue);
       },
       0,
     );
@@ -141,64 +137,78 @@ export const getBestMatchedProducts = ({
   }
 
   // combine multiples of the same product into one and update the total quantity
-  // FIXME: a reduce would be better, this approach is mutating bestMatches
-  const combinedBestMatches: BestMatch[] = [];
+  // FIXME: a reduce would be better, this approach is mutating bestMatchedShopProducts
+  const combinedShopProducts: ShopProductWithQuantityToOrder[] = [];
 
-  bestMatches.forEach((bestMatch) => {
-    const existingBestMatchIndex = combinedBestMatches.findIndex(
-      (combinedBestMatch) =>
-        combinedBestMatch.shopProductId === bestMatch.shopProductId,
+  bestMatchedShopProducts.forEach((bestMatchedShopProduct) => {
+    const existingBestMatchIndex = combinedShopProducts.findIndex(
+      (combinedBestMatch) => combinedBestMatch.id === bestMatchedShopProduct.id,
     );
 
     if (existingBestMatchIndex > -1) {
-      combinedBestMatches[existingBestMatchIndex].quantityToOrder +=
-        bestMatch.quantityToOrder;
+      combinedShopProducts[existingBestMatchIndex].quantityToOrder +=
+        bestMatchedShopProduct.quantityToOrder;
     } else {
-      combinedBestMatches.push(bestMatch);
+      combinedShopProducts.push(bestMatchedShopProduct);
     }
   });
 
   // prefer bulk items
   // do we have any duplicate items that can be replaced with a bulk item
-  const combinedBestMatchesReplacedWithBulkItems = [...combinedBestMatches];
+  const combinedBestMatchesReplacedWithBulkItems = [...combinedShopProducts];
 
-  const duplicateItems = combinedBestMatches.filter(
+  const duplicateShopProducts = combinedShopProducts.filter(
     (item) => item.quantityToOrder > 1,
   );
 
-  duplicateItems.forEach((item) => {
-    const totalQuantity = item.quantityToOrder * item.quantity;
+  duplicateShopProducts.forEach((item) => {
+    const totalQuantity = item.quantityToOrder * item.quantityValue;
 
     // can it be replaced with a bulk item?
-    const canBeReplacedWith = normalisedShopProducts.find((shopProduct) => {
+    const canBeReplacedWithShopProduct = shopProducts.find((shopProduct) => {
       const shopProductIsMultiple =
         shopProduct.quantityValue % totalQuantity === 0;
 
       return shopProductIsMultiple;
     });
 
-    if (canBeReplacedWith) {
-      const bulkBestMatch: BestMatch = {
-        shopProductId: canBeReplacedWith.id,
-        pricePerUnit: canBeReplacedWith.price,
-        quantity: canBeReplacedWith.quantityValue,
-        quantityToOrder: totalQuantity / canBeReplacedWith.quantityValue,
+    if (canBeReplacedWithShopProduct) {
+      const bulkShopProduct: ShopProductWithQuantityToOrder = {
+        ...canBeReplacedWithShopProduct,
+        quantityToOrder:
+          totalQuantity / canBeReplacedWithShopProduct.quantityValue,
       };
 
-      const itemIndex = combinedBestMatches.findIndex(
-        (bestMatch) => bestMatch.shopProductId === item.shopProductId,
+      const itemIndex = combinedShopProducts.findIndex(
+        (bestMatchedShopProduct) => bestMatchedShopProduct.id === item.id,
       );
 
-      combinedBestMatchesReplacedWithBulkItems[itemIndex] = bulkBestMatch;
+      combinedBestMatchesReplacedWithBulkItems[itemIndex] = bulkShopProduct;
     }
   });
 
+  // attach all the other products with quantityToOrder set to 0
+  const allProductsWithQuantityToOrder = shopProducts.map((shopProduct) => {
+    const bestMatchIndex = combinedBestMatchesReplacedWithBulkItems.findIndex(
+      (item) => item.id === shopProduct.id,
+    );
+
+    if (bestMatchIndex > -1) {
+      return combinedBestMatchesReplacedWithBulkItems[bestMatchIndex];
+    }
+
+    return {
+      ...shopProduct,
+      quantityToOrder: 0,
+    };
+  });
+
   // sort by quantityToOrder highest to lowest
-  const sortedCombinedBestMatches = sortArrayOfObjectsByKey(
-    combinedBestMatchesReplacedWithBulkItems,
+  const sortedShopProductsWithQuantityToOrder = sortArrayOfObjectsByKey(
+    allProductsWithQuantityToOrder,
     'quantityToOrder',
     true,
   );
 
-  return sortedCombinedBestMatches;
+  return sortedShopProductsWithQuantityToOrder;
 };

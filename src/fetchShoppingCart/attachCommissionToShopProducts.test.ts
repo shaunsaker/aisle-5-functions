@@ -1,4 +1,4 @@
-import { getCommission } from './attachCommissionToPrices';
+import { getCommission } from './attachCommissionToShopProducts';
 
 describe('getCommission', () => {
   it('returns 0 if the basePrice is 0', () => {

@@ -5,24 +5,21 @@ import { firebaseFetchProduct } from '../firebase/firebaseFetchProduct';
 import { firebaseFetchShopProduct } from '../firebase/firebaseFetchShopProduct';
 import { firebaseFetchShops } from '../firebase/firebaseFetchShops';
 import {
-  BestMatch,
   Product,
   ProductId,
   ShopId,
   ShopProduct,
   ShopProductId,
+  ShopProductWithQuantityToOrder,
 } from '../models';
 import { isObjectEmpty } from '../utils/isObjectEmpty';
 import { objectToArray } from '../utils/objectToArray';
-import { attachCommissionToBestMatches } from './attachCommissionToPrices';
-import { getBestMatchedProducts } from './getBestMatchedProducts';
+import { attachCommissionToShopProducts } from './attachCommissionToShopProducts';
+import { getShopProductsWithQuantityToOrder } from './getShopProductsWithQuantityToOrder';
 
 interface ResponseData {
   [key: ShopId]: {
-    [key: ProductId]: {
-      order: BestMatch[];
-      products: ShopProduct[];
-    };
+    [key: ProductId]: ShopProductWithQuantityToOrder[];
   };
 }
 
@@ -103,19 +100,18 @@ const fetchShoppingCartPrices = async (
           shopProducts.push(shopProduct);
         }
 
-        const bestMatchedProducts = getBestMatchedProducts({
-          quantityNeeded: item.quantity,
-          options: shopProducts,
-        });
+        const shopProductsWithQuantityToOrder =
+          getShopProductsWithQuantityToOrder({
+            quantityNeeded: item.quantity,
+            shopProducts,
+          });
 
         // attach commission to each price
-        const bestMatchedProductsWithCommission =
-          attachCommissionToBestMatches(bestMatchedProducts);
+        const shopProductsWithQuantityToOrderAndCommission =
+          attachCommissionToShopProducts(shopProductsWithQuantityToOrder);
 
-        responseData[shopId][item.productId] = {
-          order: bestMatchedProductsWithCommission,
-          products: shopProducts,
-        };
+        responseData[shopId][item.productId] =
+          shopProductsWithQuantityToOrderAndCommission;
       }
     }
 
@@ -151,11 +147,11 @@ const fetchShoppingCart = functions.https.onCall(
   },
 );
 
-// const doAsync = async () => {
-//   const response = await fetchShoppingCartPrices(process.argv[2]);
-//   console.log(JSON.stringify({ response }, undefined, 2));
-// };
+const doAsync = async () => {
+  const response = await fetchShoppingCartPrices(process.argv[2]);
+  console.log(JSON.stringify({ response }, undefined, 2));
+};
 
-// doAsync();
+doAsync();
 
 export { fetchShoppingCart };
