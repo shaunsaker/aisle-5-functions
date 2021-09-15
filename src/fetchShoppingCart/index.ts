@@ -147,11 +147,11 @@ const fetchShoppingCart = functions.https.onCall(
   },
 );
 
-const doAsync = async () => {
-  const response = await fetchShoppingCartPrices(process.argv[2]);
-  console.log(JSON.stringify({ response }, undefined, 2));
-};
+// const doAsync = async () => {
+//   const response = await fetchShoppingCartPrices(process.argv[2]);
+//   console.log(JSON.stringify({ response }, undefined, 2));
+// };
 
-doAsync();
+// doAsync();
 
 export { fetchShoppingCart };
