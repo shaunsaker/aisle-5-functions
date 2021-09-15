@@ -21,6 +21,6 @@ export const attachCommissionToShopProducts = (
 ): ShopProductWithQuantityToOrder[] => {
   return items.map((item) => ({
     ...item,
-    pricePerUnit: getCommission(item.price, COMMISSION_FACTOR),
+    price: getCommission(item.price, COMMISSION_FACTOR),
   }));
 };
