@@ -65,7 +65,7 @@ export interface ShopProduct {
   displayName: string;
   id: string;
   price: number;
-  quantityUnit: Unit;
+  quantityUnit: string;
   quantityValue: Quantity;
 }
 
@@ -73,7 +73,7 @@ export interface NormalisedShopProduct extends ShopProduct {
   quantityUnit: Unit;
 }
 
-export interface ShopProductWithQuantityToOrder extends ShopProduct {
+export interface ShopProductWithQuantityToOrder extends NormalisedShopProduct {
   quantityToOrder: Quantity;
 }
 

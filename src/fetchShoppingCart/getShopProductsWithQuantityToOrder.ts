@@ -55,9 +55,14 @@ export const normaliseShopProduct = (
   };
 };
 
+const normaliseShopProducts = (
+  shopProducts: ShopProduct[],
+): NormalisedShopProduct[] =>
+  shopProducts.map((shopProduct) => normaliseShopProduct(shopProduct));
+
 const findBestMatchedShopProduct = (
   quantityNeeded: number,
-  shopProducts: ShopProduct[],
+  shopProducts: NormalisedShopProduct[],
 ): ShopProductWithQuantityToOrder | null => {
   // ie. choose option with smallest quantity higher or equal to our quantity needed
   // (only if there are no lower items)
@@ -68,7 +73,7 @@ const findBestMatchedShopProduct = (
   }
 
   // sort from highest to lowest
-  const sortedOptions = sortArrayOfObjectsByKey<ShopProduct>(
+  const sortedOptions = sortArrayOfObjectsByKey<NormalisedShopProduct>(
     shopProducts,
     'quantityValue',
     true,
@@ -110,6 +115,9 @@ export const getShopProductsWithQuantityToOrder = ({
   quantityNeeded: Quantity;
   shopProducts: ShopProduct[];
 }): ShopProductWithQuantityToOrder[] => {
+  // normalise the shop products
+  const normalisedShopProducts = normaliseShopProducts(shopProducts);
+
   // reduce until we have our quantity needed
   let quantityStillNeeded = quantityNeeded;
   const bestMatchedShopProducts: ShopProductWithQuantityToOrder[] = [];
@@ -118,7 +126,7 @@ export const getShopProductsWithQuantityToOrder = ({
     // find the best matched product for the quantity still needed
     const bestMatchedShopProduct = findBestMatchedShopProduct(
       quantityStillNeeded,
-      shopProducts,
+      normalisedShopProducts,
     );
 
     // add it to best matches
@@ -165,12 +173,14 @@ export const getShopProductsWithQuantityToOrder = ({
     const totalQuantity = item.quantityToOrder * item.quantityValue;
 
     // can it be replaced with a bulk item?
-    const canBeReplacedWithShopProduct = shopProducts.find((shopProduct) => {
-      const shopProductIsMultiple =
-        shopProduct.quantityValue % totalQuantity === 0;
+    const canBeReplacedWithShopProduct = normalisedShopProducts.find(
+      (shopProduct) => {
+        const shopProductIsMultiple =
+          shopProduct.quantityValue % totalQuantity === 0;
 
-      return shopProductIsMultiple;
-    });
+        return shopProductIsMultiple;
+      },
+    );
 
     if (canBeReplacedWithShopProduct) {
       const bulkShopProduct: ShopProductWithQuantityToOrder = {
@@ -188,20 +198,22 @@ export const getShopProductsWithQuantityToOrder = ({
   });
 
   // attach all the other products with quantityToOrder set to 0
-  const allProductsWithQuantityToOrder = shopProducts.map((shopProduct) => {
-    const bestMatchIndex = combinedBestMatchesReplacedWithBulkItems.findIndex(
-      (item) => item.id === shopProduct.id,
-    );
+  const allProductsWithQuantityToOrder = normalisedShopProducts.map(
+    (shopProduct) => {
+      const bestMatchIndex = combinedBestMatchesReplacedWithBulkItems.findIndex(
+        (item) => item.id === shopProduct.id,
+      );
 
-    if (bestMatchIndex > -1) {
-      return combinedBestMatchesReplacedWithBulkItems[bestMatchIndex];
-    }
+      if (bestMatchIndex > -1) {
+        return combinedBestMatchesReplacedWithBulkItems[bestMatchIndex];
+      }
 
-    return {
-      ...shopProduct,
-      quantityToOrder: 0,
-    };
-  });
+      return {
+        ...shopProduct,
+        quantityToOrder: 0,
+      };
+    },
+  );
 
   // sort by quantityToOrder highest to lowest
   const sortedShopProductsWithQuantityToOrder = sortArrayOfObjectsByKey(
