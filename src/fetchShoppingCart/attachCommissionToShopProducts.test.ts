@@ -35,4 +35,11 @@ describe('getCommission', () => {
 
     expect(getCommission(basePrice, commission)).toEqual(142.99);
   });
+
+  it('returns two digits', () => {
+    const basePrice = 129.99;
+    const commission = 0.1;
+
+    expect(getCommission(basePrice, commission)).toEqual(142.99);
+  });
 });
