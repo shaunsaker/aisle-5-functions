@@ -4,6 +4,7 @@ import { firebaseFetchActiveShoppingList } from '../firebase/firebaseFetchActive
 import { firebaseFetchProduct } from '../firebase/firebaseFetchProduct';
 import { firebaseFetchShopProduct } from '../firebase/firebaseFetchShopProduct';
 import { firebaseFetchShops } from '../firebase/firebaseFetchShops';
+import { FirebaseCallableFunctionsResponse } from '../firebase/models';
 import {
   Product,
   ProductId,
@@ -23,11 +24,7 @@ interface ResponseData {
   };
 }
 
-interface Response {
-  error: boolean;
-  message: string;
-  data: ResponseData | undefined;
-}
+type Response = FirebaseCallableFunctionsResponse<ResponseData>;
 
 // FIXME: this could be made faster by using firestore batches instead of waiting in loops
 const fetchShoppingCartPrices = async (

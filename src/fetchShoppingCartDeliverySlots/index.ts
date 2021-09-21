@@ -1,14 +1,11 @@
 import * as functions from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/v1/https';
 import moment = require('moment');
+import { FirebaseCallableFunctionsResponse } from '../firebase/models';
 import { ShopIds, ShoppingCartDeliverySlots } from '../models';
 import { woolworthsFetchDeliverySlots } from '../woolworths/woolworthsFetchDeliverySlots';
 
-interface Response {
-  error: boolean;
-  message: string;
-  data: ShoppingCartDeliverySlots | undefined;
-}
+type Response = FirebaseCallableFunctionsResponse<ShoppingCartDeliverySlots>;
 
 const fetchDeliverySlotsForShop = async (
   uid: string | undefined,
