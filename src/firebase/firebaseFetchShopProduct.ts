@@ -1,8 +1,8 @@
 import { firebase } from '.';
-import { ShopId, ShopProduct, ShopProductId } from '../models';
+import { ShopIds, ShopProduct, ShopProductId } from '../models';
 
 export const firebaseFetchShopProduct = async (
-  shopId: ShopId,
+  shopId: ShopIds,
   shopProductId: ShopProductId,
 ): Promise<ShopProduct> => {
   return new Promise(async (resolve, reject) => {

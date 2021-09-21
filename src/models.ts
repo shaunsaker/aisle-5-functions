@@ -32,10 +32,12 @@ export interface ShoppingList {
   orderTotal?: ShoppingListOrderTotal;
 }
 
-export type ShopId = string;
+export enum ShopIds {
+  Woolworths = 'woolworths',
+}
 
 export interface Shop {
-  id: ShopId;
+  id: ShopIds;
   displayName: string;
 }
 
@@ -78,3 +80,16 @@ export interface ShopProductWithQuantityToOrder extends NormalisedShopProduct {
 }
 
 export const COMMISSION_FACTOR = 0.1;
+
+export type ShoppingCartDeliverySlotId = string;
+
+export interface ShoppingCartDeliverySlot {
+  id: ShoppingCartDeliverySlotId;
+  timeFrom: string; // FIXME: we should use Time as a type
+  timeTo: string;
+}
+
+export type ShoppingCartDeliverySlots = Record<
+  ShoppingCartDeliverySlotId,
+  ShoppingCartDeliverySlot
+>;

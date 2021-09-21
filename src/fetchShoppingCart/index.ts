@@ -7,7 +7,7 @@ import { firebaseFetchShops } from '../firebase/firebaseFetchShops';
 import {
   Product,
   ProductId,
-  ShopId,
+  ShopIds,
   ShopProduct,
   ShopProductId,
   ShopProductWithQuantityToOrder,
@@ -18,7 +18,7 @@ import { attachCommissionToShopProducts } from './attachCommissionToShopProducts
 import { getShopProductsWithQuantityToOrder } from './getShopProductsWithQuantityToOrder';
 
 interface ResponseData {
-  [key: ShopId]: {
+  [ShopIds.Woolworths]: {
     [key: ProductId]: ShopProductWithQuantityToOrder[];
   };
 }
@@ -66,7 +66,9 @@ const fetchShoppingCartPrices = async (
     // fetch the shops
     const shops = await firebaseFetchShops();
 
-    const responseData: ResponseData = {};
+    const responseData: ResponseData = {
+      [ShopIds.Woolworths]: {},
+    };
 
     for await (const shop of shops) {
       const shopId = shop.id;
