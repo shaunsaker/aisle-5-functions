@@ -86,6 +86,14 @@ const fetchShoppingCartDeliverySlots = functions.https.onCall(
     data: { shopId: ShopIds },
     context: CallableContext,
   ): Promise<Response> => {
+    if (!data || !data.shopId) {
+      return {
+        error: true,
+        message: 'Please provide a shopId.',
+        data: undefined,
+      };
+    }
+
     const uid = context.auth?.uid;
     const response = await fetchDeliverySlotsForShop(uid, data.shopId);
 
