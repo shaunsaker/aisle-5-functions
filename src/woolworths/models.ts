@@ -12,5 +12,6 @@ export const defaultWoolworthsAxiosConfig: AxiosRequestConfig = {
 
 export enum WoolworthsEndpoints {
   login = 'login',
+  logout = 'logout',
   deliverySlots = 'deliverySlots',
 }

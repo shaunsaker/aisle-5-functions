@@ -5,6 +5,7 @@ import {
   WoolworthsEndpoints,
 } from './models';
 import { woolworthsLogin } from './woolworthsLogin';
+import { woolworthsLogout } from './woolworthsLogout';
 
 export interface WoolworthsDeliverySlot {
   slotId: string;
@@ -22,6 +23,18 @@ export interface WoolworthsDeliverySlotsResponse {
 export const woolworthsFetchDeliverySlots =
   async (): Promise<WoolworthsDeliverySlotsResponse> => {
     try {
+      const hasAuthCookie = axios.defaults.headers.cookie;
+
+      if (hasAuthCookie) {
+        // logout to clear any cookies
+        try {
+          await woolworthsLogout();
+        } catch (error) {
+          // continue if there is an error
+          console.log({ error });
+        }
+      }
+
       await woolworthsLogin();
 
       console.log('Logged in successfully.');
