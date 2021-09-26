@@ -43,6 +43,7 @@ const fetchDeliverySlotsForShop = async (
                 if (slotId && !shoppingCartDeliverySlots[slotId]) {
                   shoppingCartDeliverySlots[slotId] = {
                     id: slotId,
+                    cost: deliverySlot.slotCost,
                     timeFrom: moment(deliverySlot.shipOnDate)
                       .add({ hours: deliverySlot.intHourFrom })
                       .toISOString(),

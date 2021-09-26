@@ -85,6 +85,7 @@ export type ShoppingCartDeliverySlotId = string;
 
 export interface ShoppingCartDeliverySlot {
   id: ShoppingCartDeliverySlotId;
+  cost: number;
   timeFrom: string; // FIXME: we should use Time as a type
   timeTo: string;
 }

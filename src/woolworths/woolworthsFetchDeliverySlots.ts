@@ -9,6 +9,7 @@ import { woolworthsLogout } from './woolworthsLogout';
 
 export interface WoolworthsDeliverySlot {
   slotId: string;
+  slotCost: number;
   shipOnDate: number;
   intHourFrom: number;
   intHourTo: number;
