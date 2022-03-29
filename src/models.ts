@@ -1,4 +1,4 @@
-// TODO: these are all shared with aisle-5 (same with utils)
+// FIXME: these are all shared with aisle-5 (same with utils)
 export type ProductId = string;
 
 export type ShoppingListItemId = ProductId;

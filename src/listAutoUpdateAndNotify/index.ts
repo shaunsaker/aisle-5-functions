@@ -31,6 +31,7 @@ const listAutoUpdateAndNotify = functions.pubsub
           shoppingLists,
           userData.settingsPantryItemLowStatusThreshold,
         );
+
         const shoppingListItems: ShoppingListItems = arrayToObject(
           lowPantryItems
             .filter((pantryItem) => pantryItem)
@@ -52,6 +53,7 @@ const listAutoUpdateAndNotify = functions.pubsub
         const activeShoppingList = objectToArray(shoppingLists).find(
           (shoppingList) => shoppingList.active,
         );
+
         if (!activeShoppingList) {
           // if the user does not have an active shopping list, create one
 
@@ -79,14 +81,18 @@ const listAutoUpdateAndNotify = functions.pubsub
         }
 
         const userHasRegisteredForNotifications = userData.fcmToken;
-        const notifyUserToPlaceNewOrder =
+        const shouldNotifyUserToPlaceNewOrder =
           userData.settingsNotifyLowPantryItems &&
           lowPantryItems.length >= userData.settingsNotifyLowPantryItemCount;
-        if (userHasRegisteredForNotifications && notifyUserToPlaceNewOrder) {
+
+        if (
+          userHasRegisteredForNotifications &&
+          shouldNotifyUserToPlaceNewOrder
+        ) {
           // notify the user to place a new order
           await firebaseSendNotification({
             title: `You're running low on ${lowPantryItems.length} groceries!`,
-            body: 'Tap this notification to place an order in Aisle 5 🚛',
+            body: 'Tap this notification to place an order with Aisle 5 🚛',
             token: userData.fcmToken,
           });
         }
