@@ -2,3 +2,4 @@
 // export * from './functions/fetchShoppingCart';
 // export * from './functions/fetchShoppingCartDeliverySlots';
 // export * from './functions/listAutoUpdateAndNotify';
+export * from './functions/onCreateShoppingListMembers';
