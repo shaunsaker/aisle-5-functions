@@ -149,3 +149,9 @@ export interface PantryItem {
   daysLeft: number | null; // null indicates that we don't yet have enough data
   usagePerDay: number | null; // this is different to the mobile app
 }
+
+export interface CallResponse {
+  success?: boolean;
+  error?: boolean;
+  message?: string;
+}
