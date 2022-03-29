@@ -17,7 +17,7 @@ export const firebaseFetchShoppingLists = async (
         await firebase
           .firestore()
           .collection('shoppingLists')
-          .where('members', 'array-contains', uid)
+          .where('createdByUid', '==', uid)
           .get()
       ).docs.forEach((doc) => {
         shoppingLists[doc.id] = doc.data() as ShoppingList;
