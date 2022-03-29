@@ -14,7 +14,7 @@ export const firebaseUpdateShoppingList = ({
         .firestore()
         .collection('shoppingLists')
         .doc(shoppingListId)
-        .update(shoppingList);
+        .set(shoppingList, { merge: true });
 
       resolve();
     } catch (error) {

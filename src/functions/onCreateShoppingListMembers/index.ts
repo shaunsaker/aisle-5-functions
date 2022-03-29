@@ -75,10 +75,7 @@ export const createShoppingListMembers = async ({
   // save the user member uids to the shopping list
   const newShoppingList: ShoppingList = {
     ...shoppingList,
-    members: [
-      ...shoppingList.members, // this would include the user who created the shopping list
-      ...userMemberUids,
-    ],
+    members: [uid, ...userMemberUids],
   };
 
   await firebaseUpdateShoppingList({

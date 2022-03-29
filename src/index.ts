@@ -3,3 +3,4 @@
 // export * from './functions/fetchShoppingCartDeliverySlots';
 // export * from './functions/listAutoUpdateAndNotify';
 export * from './functions/onCreateShoppingListMembers';
+export * from './functions/onUserDataChanged';
