@@ -1,5 +1,5 @@
 import { firebase } from '.';
-import { ShoppingList } from '../models';
+import { ShoppingList } from '../../models';
 
 export const firebaseCreateShoppingList = (
   shoppingList: Omit<ShoppingList, 'id'>,

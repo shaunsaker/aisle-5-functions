@@ -4,8 +4,8 @@ import {
   ShopProduct,
   ShopProductWithQuantityToOrder,
   Unit,
-} from '../models';
-import { sortArrayOfObjectsByKey } from '../utils/sortArrayOfObjectsByKey';
+} from '../../models';
+import { sortArrayOfObjectsByKey } from '../../utils/sortArrayOfObjectsByKey';
 
 // TODO: move this to scraper
 export const normaliseShopProduct = (

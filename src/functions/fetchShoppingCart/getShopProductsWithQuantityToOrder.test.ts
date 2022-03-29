@@ -1,4 +1,4 @@
-import { makeShopProduct } from '../testUtils/makeShopProduct';
+import { makeShopProduct } from '../../testUtils/makeShopProduct';
 import { getShopProductsWithQuantityToOrder } from './getShopProductsWithQuantityToOrder';
 
 describe('getShopProductsWithQuantityToOrder', () => {

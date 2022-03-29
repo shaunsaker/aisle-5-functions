@@ -1,4 +1,4 @@
 // NOTE: these are disabled for now
-// export * from './fetchShoppingCart';
-// export * from './fetchShoppingCartDeliverySlots';
-// export * from './listAutoUpdateAndNotify';
+// export * from './functions/fetchShoppingCart';
+// export * from './functions/fetchShoppingCartDeliverySlots';
+// export * from './functions/listAutoUpdateAndNotify';

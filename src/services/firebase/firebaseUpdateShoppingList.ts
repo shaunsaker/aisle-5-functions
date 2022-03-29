@@ -1,5 +1,5 @@
 import { firebase } from '.';
-import { ShoppingList, ShoppingListId } from '../models';
+import { ShoppingList, ShoppingListId } from '../../models';
 
 export const firebaseUpdateShoppingList = ({
   shoppingListId,

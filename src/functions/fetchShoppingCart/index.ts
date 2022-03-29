@@ -1,10 +1,10 @@
 import * as functions from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/v1/https';
-import { firebaseFetchActiveShoppingList } from '../firebase/firebaseFetchActiveShoppingList';
-import { firebaseFetchProduct } from '../firebase/firebaseFetchProduct';
-import { firebaseFetchShopProduct } from '../firebase/firebaseFetchShopProduct';
-import { firebaseFetchShops } from '../firebase/firebaseFetchShops';
-import { FirebaseCallableFunctionsResponse } from '../firebase/models';
+import { firebaseFetchActiveShoppingList } from '../../services/firebase/firebaseFetchActiveShoppingList';
+import { firebaseFetchProduct } from '../../services/firebase/firebaseFetchProduct';
+import { firebaseFetchShopProduct } from '../../services/firebase/firebaseFetchShopProduct';
+import { firebaseFetchShops } from '../../services/firebase/firebaseFetchShops';
+import { FirebaseCallableFunctionsResponse } from '../../services/firebase/models';
 import {
   Product,
   ProductId,
@@ -12,9 +12,9 @@ import {
   ShopProduct,
   ShopProductId,
   ShopProductWithQuantityToOrder,
-} from '../models';
-import { isObjectEmpty } from '../utils/isObjectEmpty';
-import { objectToArray } from '../utils/objectToArray';
+} from '../../models';
+import { isObjectEmpty } from '../../utils/isObjectEmpty';
+import { objectToArray } from '../../utils/objectToArray';
 import { attachCommissionToShopProducts } from './attachCommissionToShopProducts';
 import { getShopProductsWithQuantityToOrder } from './getShopProductsWithQuantityToOrder';
 

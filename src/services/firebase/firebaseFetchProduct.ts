@@ -1,5 +1,5 @@
 import { firebase } from '.';
-import { Product, ProductId } from '../models';
+import { Product, ProductId } from '../../models';
 
 export const firebaseFetchProduct = async (
   productId: ProductId,

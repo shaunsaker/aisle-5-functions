@@ -1,4 +1,4 @@
-import { COMMISSION_FACTOR, ShopProductWithQuantityToOrder } from '../models';
+import { COMMISSION_FACTOR, ShopProductWithQuantityToOrder } from '../../models';
 
 export const getCommission = (
   basePrice: number,

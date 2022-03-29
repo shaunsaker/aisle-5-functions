@@ -1,5 +1,5 @@
 import { firebase } from '.';
-import { Shop, Shops } from '../models';
+import { Shop, Shops } from '../../models';
 
 export const firebaseFetchShops = async (): Promise<Shops> => {
   return new Promise(async (resolve, reject) => {

@@ -1,14 +1,14 @@
 import * as functions from 'firebase-functions';
-import { firebaseCreateShoppingList } from '../firebase/firebaseCreateShoppingList';
-import { firebaseFetchShoppingLists } from '../firebase/firebaseFetchShoppingLists';
-import { firebaseFetchUsers } from '../firebase/firebaseFetchUsers';
-import { firebaseSendNotification } from '../firebase/firebaseSendNotification';
-import { firebaseUpdateShoppingList } from '../firebase/firebaseUpdateShoppingList';
-import { ShoppingListItem, ShoppingListItems } from '../models';
-import { arrayToObject } from '../utils/arrayToObject';
-import { getLowPantryItems } from '../utils/getLowPantryItems';
-import { getTimeAsISOString } from '../utils/getTimeAsISOString';
-import { objectToArray } from '../utils/objectToArray';
+import { firebaseCreateShoppingList } from '../../services/firebase/firebaseCreateShoppingListppingList';
+import { firebaseFetchShoppingLists } from '../../services/firebase/firebaseFetchShoppingListspingLists';
+import { firebaseFetchUsers } from '../../services/firebase/firebaseFetchUsersetchUsers';
+import { firebaseSendNotification } from '../../services/firebase/firebaseSendNotificationification';
+import { firebaseUpdateShoppingList } from '../../services/firebase/firebaseUpdateShoppingListppingList';
+import { ShoppingListItem, ShoppingListItems } from '../../models';
+import { arrayToObject } from '../../utils/arrayToObject';
+import { getLowPantryItems } from '../../utils/getLowPantryItems';
+import { getTimeAsISOString } from '../../utils/getTimeAsISOString';
+import { objectToArray } from '../../utils/objectToArray';
 
 // FIXME: some of this logic is shared with the mobile app
 // we could let the backend handle the logic by creating a new endpoint
