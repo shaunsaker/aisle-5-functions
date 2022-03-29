@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import { CallableContext } from 'firebase-functions/v1/https';
 import moment = require('moment');
-import { FirebaseCallableFunctionsResponse } from '../../services/firebase/modelsse/models';
+import { FirebaseCallableFunctionsResponse } from '../../services/firebase/models';
 import { ShopIds, ShoppingCartDeliverySlots } from '../../models';
 import { woolworthsFetchDeliverySlots } from '../../services/woolworths/woolworthsFetchDeliverySlots';
 

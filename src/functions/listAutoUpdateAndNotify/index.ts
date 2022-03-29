@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
-import { firebaseCreateShoppingList } from '../../services/firebase/firebaseCreateShoppingListppingList';
-import { firebaseFetchShoppingLists } from '../../services/firebase/firebaseFetchShoppingListspingLists';
-import { firebaseFetchUsers } from '../../services/firebase/firebaseFetchUsersetchUsers';
-import { firebaseSendNotification } from '../../services/firebase/firebaseSendNotificationification';
-import { firebaseUpdateShoppingList } from '../../services/firebase/firebaseUpdateShoppingListppingList';
+import { firebaseCreateShoppingList } from '../../services/firebase/firebaseCreateShoppingList';
+import { firebaseFetchShoppingLists } from '../../services/firebase/firebaseFetchShoppingLists';
+import { firebaseFetchUsers } from '../../services/firebase/firebaseFetchUsers';
+import { firebaseSendNotification } from '../../services/firebase/firebaseSendNotification';
+import { firebaseUpdateShoppingList } from '../../services/firebase/firebaseUpdateShoppingList';
 import { ShoppingListItem, ShoppingListItems } from '../../models';
 import { arrayToObject } from '../../utils/arrayToObject';
 import { getLowPantryItems } from '../../utils/getLowPantryItems';
